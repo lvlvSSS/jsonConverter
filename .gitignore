@@ -30,3 +30,6 @@ hs_err_pid*
 # Mac OS
 .DS_Store
 **/.DS_Store
+
+# maven
+/target/
