@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<models>
+	<model name="MedicationSync" ver="3272" group="BDIE-MDIS" sourceType="ARRAY" resultType="SINGLE">
+		<field name="Token" type="string" from="" mapType="" converter="" defaultValue="" />
+		<field name="MedicationList" type="list" >
+            <field name="MedicationName" type="string" from="" mapType="JS_FUNCTION" functionInName="checkNameLen()" defaultValue="" nullable="false">
+			  <script> <![CDATA[
+                function checkNameLen() {
+				  var name = '${C9}';
+				  var len = name.length;
+				  if( !isNaN(len) && len > 40 )
+				    return name.substring(0,40);
+				  else
+				    return name;
+                 }
+			  ]]></script>
+			</field>
+		    <field name="MedicationCode" type="string" from="MEDCODE" mapType="NORMAL" converter="" defaultValue="" nullable="false"/>
+			<field name="MedicationSpec" type="string" from="UNITDOSAGE" mapType="" converter="" defaultValue="" nullable="false"/>
+			<field name="BasicUnit" type="string" from="BASICUNITS" mapType="" converter="" defaultValue="" nullable="false"/>
+			<field name="BasicUnitQty" type="int" from="PACKAGINGNUMBER" mapType="" converter="" defaultValue="" nullable="false"/>
+			<field name="PackageType" type="string" from="PACKAGINGUNITS" mapType="" converter="" defaultValue="" nullable="false"/>
+			<field name="Storage" type="string" from="" mapType="" converter="" defaultValue="" />
+			<field name="Ingredient" type="string" from="" mapType="" converter="" defaultValue="" />
+			<field name="Description" type="string" from="" mapType="" converter="" defaultValue="" />
+			<field name="PharmacologicalAction" type="string" from="" mapType="" converter="" defaultValue="" />
+			<field name="Indication" type="string" from="" mapType="" converter="" defaultValue="" />
+			<field name="Contraindication" type="string" from="" mapType="" converter="" defaultValue="" />
+			<field name="Precaution" type="string" from="" mapType="" converter="" defaultValue="" />
+			<field name="AdverseReaction" type="string" from="" mapType="" converter="" defaultValue="" />
+			<field name="Others" type="string" from="" mapType="" converter="" defaultValue="" />
+			<field name="DefaultStorageLocation" type="string" from="" mapType="" converter="" defaultValue="#null" />
+			<field name="DefaultBatchNo" type="string" from="" mapType="" converter="" defaultValue="#null" />
+			<field name="DefaultExpiryDate" type="string" from="" mapType="" converter="" defaultValue="#null" />
+			<field name="MedicationSpecifications" type="list" >
+			    <field name="ScanCode" type="string" from="" mapType="" converter="" defaultValue="" />
+				<field name="Manufacturer" type="string" from="MANUFACTURER" mapType="NORMAL" defaultValue="" nullable="false"/>
+				<field name="BrandName" type="string" mapType="JS_FUNCTION" functionInName="checkNameLen()" defaultValue="" nullable="false">
+				  <script> <![CDATA[
+                    function checkNameLen() {
+				      var medGname = '${C9}';
+					  var medBname = '${C8}';
+					  var factname = '${C4}';
+					  var medname = '';
+					  
+					  if( medBname != '' )
+					    medBname = medBname.substring(0,10);
+					  if( medBname != '' )
+					    medname = medBname;
+					  else
+					    medname = medGname.substring(0,10);
+					  
+					  var bn = medname + ' ' + factname;
+				      var len = bn.length;
+				      if( !isNaN(len) && len > 40 )
+				        return bn.substring(0,40);
+				      else
+				        return bn;
+                    }
+			      ]]></script>
+			    </field>
+				<field name="SpecificationType" type="string" from="MANUFACTURER" mapType="" converter="" defaultValue="" nullable="false" />
+				<field name="ExpiryWarning" type="string" from="" mapType="" converter="" defaultValue="#null" />
+				<field name="DefaultStorageLocation" type="string" from="" mapType="" converter="" defaultValue="" />
+				<field name="DefaultBatchNo" type="string" from="" mapType="" converter="" defaultValue="" />
+				<field name="DefaultExpiryDate" type="string" from="" mapType="" converter="" defaultValue="#null" />
+				<field name="IsDismounted" type="bool" from="" mapType="" converter="" defaultValue="false" />
+				<field name="Active" type="bool" from="" mapType="" converter="" defaultValue="false" />
+			</field>
+		</field>
+	</model>
+	
+	<model name="TestDemo" ver="3272" group="BDIE-MDIS" sourceType="ARRAY" resultType="ARRAY" >
+		<field name="name" type="string" from="name" mapType="NORMAL"  defaultValue="" />
+		<field name="name" type="string" from="name" mapType="REF" refAlias="name1" defaultValue="" />
+		<field name="DETAILS" type="list" from="details">
+			<field name="child" type="int" from="childNum" mapType="NORMAL" defaultValue="0" />
+			<field name="child" type="int" from="childNum" mapType="REF" refAlias="child1" defaultValue="0" />
+			 <field name="NameAndChildNum" type="string" from="name1,child1" mapType="JS_FUNCTION" functionInName="returnNameAndChild" defaultValue="default" nullable="false">
+			  <script> <![CDATA[
+                function returnNameAndChild(name, num) {
+				  return name+":"+num.toString();
+                 }
+			  ]]></script>
+			</field>
+		</field>
+	</model>
+	
+	<model name="MedicationSyncByHttpPost" ver="3272" group="BDIE-MDIS" sourceType="SINGLE" resultType="SINGLE">
+		<field name="Token" type="string" from="" mapType="" defaultValue="" nullable="false"/>
+		<field name="MedicationList" type="list" from="list">
+            <field name="MedicationName" type="string" from="drug_name" mapType="NORMAL" defaultValue="" nullable="false"/>
+		    <field name="MedicationCode" type="string" from="drug_code" mapType="NORMAL" defaultValue="" nullable="false"/>
+			<field name="MedicationSpec" type="string" from="specs" mapType="NORMAL" defaultValue="" nullable="false"/>
+			<field name="BasicUnit" type="string" from="dose_unit" mapType="" converter="" defaultValue="" nullable="false"/>
+			<field name="BasicUnitQty" type="int" from="base_dose" mapType="" converter="" defaultValue="" nullable="false"/>
+			<field name="PackageType" type="string" from="pack_unit" mapType="" converter="" defaultValue="" nullable="false"/>
+			<field name="Storage" type="string" from="" mapType="" converter="" defaultValue="" />
+			<field name="Ingredient" type="string" from="" mapType="" converter="" defaultValue="" />
+			<field name="Description" type="string" from="" mapType="" converter="" defaultValue="" />
+			<field name="PharmacologicalAction" type="string" from="" mapType="" converter="" defaultValue="" />
+			<field name="Indication" type="string" from="" mapType="" converter="" defaultValue="" />
+			<field name="Contraindication" type="string" from="" mapType="" converter="" defaultValue="" />
+			<field name="Precaution" type="string" from="" mapType="" converter="" defaultValue="" />
+			<field name="AdverseReaction" type="string" from="" mapType="" converter="" defaultValue="" />
+			<field name="Others" type="string" from="" mapType="" converter="" defaultValue="" />
+			<field name="DefaultStorageLocation" type="string" from="" mapType="" converter="" defaultValue="" />
+			<field name="DefaultBatchNo" type="string" from="" mapType="" converter="" defaultValue="" />
+			<field name="DefaultExpiryDate" type="string" from="" mapType="" converter="" defaultValue="" />
+			<field name="MedicationSpecifications" type="list" from="">
+			    <field name="ScanCode" type="string" from="" mapType="" converter="" defaultValue="" />
+				<field name="Manufacturer" type="string" from="center_code" mapType="NORMAL" defaultValue="" nullable="false"/>
+				<field name="BrandName" type="string" mapType="NORMAL" from="regular_name" defaultValue="" nullable="false"/>
+				<field name="SpecificationType" type="string" from="specs" mapType="NORMAL" converter="" defaultValue="" nullable="false" />
+				<field name="ExpiryWarning" type="string" from="" mapType="" converter="" defaultValue="" />
+				<field name="DefaultStorageLocation" type="string" from="" mapType="" converter="" defaultValue="" />
+				<field name="DefaultBatchNo" type="string" from="" mapType="" converter="" defaultValue="" />
+				<field name="DefaultExpiryDate" type="string" from="" mapType="" converter="" defaultValue="" />
+				<field name="IsDismounted" type="boolean" from="" mapType="" converter="" defaultValue="false" nullable="false"/>
+				<field name="Active" type="boolean" from="" mapType="" converter="" defaultValue="true" nullable="false"/>
+			</field>
+		</field>
+	</model>
+</models>
