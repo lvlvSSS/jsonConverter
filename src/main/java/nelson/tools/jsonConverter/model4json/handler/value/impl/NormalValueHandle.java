@@ -29,6 +29,7 @@ public enum NormalValueHandle implements ValueHandler {
 	// 有可能是List或者Array，如a[1]这种模式
 	private String indexPattern = "^([^\\[\\]]*)\\[(\\d+)]$";
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public Object handle(FieldHandler<?> fieldHandle, Object source) {
 		if (source == null)
@@ -48,8 +49,8 @@ public enum NormalValueHandle implements ValueHandler {
 		if (StringUtils.isBlank(fieldHandle.getXmlField().getFrom()))
 			return source;
 
-		Map<String, Object> mapSource = JacksonUtils.fromJsonMap(JacksonUtils.toJson(source), String.class,
-				Object.class);
+		Map<String, Object> mapSource = source instanceof Map ? (Map<String, Object>) source
+				: JacksonUtils.fromJsonMap(JacksonUtils.toJson(source), String.class, Object.class);
 		if (mapSource == null) {
 			LOG.error(String.format(
 					"[NormalValueHandle.handle] field[%s] can't convert source[%s] map in FieldHandler[%s]",

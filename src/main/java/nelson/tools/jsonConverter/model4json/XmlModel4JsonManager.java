@@ -3,6 +3,7 @@ package nelson.tools.jsonConverter.model4json;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -24,16 +25,13 @@ import nelson.tools.jsonConverter.model4json.XmlModel;
 import nelson.tools.jsonConverter.model4json.XmlModelType;
 
 /**
- * analysis the model4json.xml
+ * initialize the xml file for model.
  * <p/>
- * this class should be singleton
+ * it will analysis the model4json.xml by default;
  * <p/>
  * 
- * @author nelson
- *
  */
-public enum XmlModel4JsonManager {
-	INSTANCE;
+public class XmlModel4JsonManager {
 	private Log LOG = LogFactory.getLog(XmlModel4JsonManager.class);
 
 	public Map<String, XmlModel> getModels() {
@@ -52,7 +50,29 @@ public enum XmlModel4JsonManager {
 
 	private Map<String, XmlModel> models;
 
-	private XmlModel4JsonManager() {
+	/**
+	 * by default ,it will load the model4json.xml in classpath.
+	 * 
+	 * @throws IOException
+	 * @throws DocumentException
+	 */
+	public XmlModel4JsonManager() throws IOException, DocumentException {
+		String path = Paths.get(Thread.currentThread().getContextClassLoader().getResource("").getPath(), "resources",
+				"model4json.xml").toString();
+		LOG.info(String.format("Ready to load the model4json.xml from path[%s]", path));
+		init(path);
+	}
+
+	/**
+	 * use specified path to load the model;
+	 * 
+	 * @param path the path of model4json.xml(usually names as model4json.xml)
+	 * @throws IOException
+	 * @throws DocumentException
+	 */
+	public XmlModel4JsonManager(String path) throws IOException, DocumentException {
+		LOG.info(String.format("Ready to load the model4json.xml from path[%s]", path));
+		init(path);
 	}
 
 	/**

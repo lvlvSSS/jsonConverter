@@ -7,9 +7,6 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import lombok.Getter;
-import lombok.Setter;
-
 /**
  * model4json.xml中的model的模型。
  * 
@@ -23,33 +20,75 @@ public class XmlModel {
 		this.fields = new ArrayList<XmlField>();
 	}
 
-	@Getter
-	@Setter
 	private String name;
 
-	@Getter
-	@Setter
+	public String getName() {
+		return this.name;
+	}
+
+	public void setName(String theName) {
+		this.name = theName;
+	}
+
 	private String ver;
 
-	@Getter
-	@Setter
+	public String getVer() {
+		return this.ver;
+	}
+
+	public void setVer(String theVer) {
+		this.ver = theVer;
+	}
+
 	private String group;
 
-	@Getter
-	@Setter
+	public String getGroup() {
+		return this.group;
+	}
+
+	public void setGroup(String theGroup) {
+		this.group = theGroup;
+	}
+
 	private String from;
 
-	@Getter
-	@Setter
+	public String getFrom() {
+		return this.from;
+	}
+
+	public void setFrom(String theFrom) {
+		this.from = theFrom;
+	}
+
 	private XmlModelType sourceType;
 
-	@Getter
-	@Setter
+	public XmlModelType getSourceType() {
+		return this.sourceType;
+	}
+
+	public void setSourceType(XmlModelType theSourceType) {
+		this.sourceType = theSourceType;
+	}
+
 	private XmlModelType resultType;
 
-	@Getter
-	@Setter
+	public XmlModelType getResultType() {
+		return this.resultType;
+	}
+
+	public void setResultType(XmlModelType theResultType) {
+		this.resultType = theResultType;
+	}
+
 	private List<XmlField> fields;
+
+	public List<XmlField> getFields() {
+		return this.fields;
+	}
+
+	public void setFields(List<XmlField> theFields) {
+		this.fields = theFields;
+	}
 
 	public static XmlModelType toXmlModeType(String value) {
 		if (StringUtils.isBlank(value))

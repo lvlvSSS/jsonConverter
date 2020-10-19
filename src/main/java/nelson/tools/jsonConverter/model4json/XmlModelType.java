@@ -1,18 +1,18 @@
 package nelson.tools.jsonConverter.model4json;
 
 /**
- * 用于表示，XmlModel的源数据或者返回结果
+ * this is to declare that the type of the source data or the target data.
  * 
  * @author nelson
  *
  */
 public enum XmlModelType {
 	/**
-	 * 所需要处理的对象为List类型
+	 * The type is List
 	 */
 	ARRAY,
 	/**
-	 * 所需要处理的对象为Map类型
+	 * The type is Map.
 	 */
 	SINGLE;
 }

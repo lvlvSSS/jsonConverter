@@ -6,9 +6,6 @@ import nelson.tools.jsonConverter.model4json.XmlField;
 import nelson.tools.jsonConverter.model4json.handler.value.ValueHandler;
 import nelson.tools.jsonConverter.model4json.handler.value.impl.NormalValueHandle;
 
-import lombok.Getter;
-import lombok.Setter;
-
 /**
  * the subclass is used to handle the attribute -'type' of the model4json.xml
  * 
@@ -28,12 +25,21 @@ public abstract class FieldHandler<T> {
 
 	public abstract T postFieldValue(XmlField field, Object source);
 
-	@Getter
 	protected FieldHandler<?> parentHandler;
 
-	@Getter
-	@Setter
+	public FieldHandler<?> getParentHandler() {
+		return this.parentHandler;
+	}
+
 	protected Map<String, Object> refs;
+
+	public Map<String, Object> getRefs() {
+		return this.refs;
+	}
+
+	public void setRefs(Map<String, Object> theRefs) {
+		this.refs = theRefs;
+	}
 
 	private int index = -1;
 
@@ -41,9 +47,15 @@ public abstract class FieldHandler<T> {
 		return this.index;
 	}
 
-	@Getter
-	@Setter
 	private XmlField xmlField;
+
+	public XmlField getXmlField() {
+		return this.xmlField;
+	}
+
+	public void setXmlField(XmlField theXmlField) {
+		this.xmlField = theXmlField;
+	}
 
 	private ValueHandler valueHandler;
 
