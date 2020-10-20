@@ -26,7 +26,7 @@ import nelson.tools.jsonConverter.helper.RegexUtils;
 public enum NormalValueHandle implements ValueHandler {
 	INSTANCE;
 	private Log LOG = LogFactory.getLog(NormalValueHandle.class);
-	// 有可能是List或者Array，如a[1]这种模式
+	// the source could be Array/List, so considering the pattern like 'a[1]'.
 	private String indexPattern = "^([^\\[\\]]*)\\[(\\d+)]$";
 
 	@SuppressWarnings("unchecked")

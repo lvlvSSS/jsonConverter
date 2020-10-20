@@ -185,7 +185,9 @@ public class XmlField {
 	public void setNullable(boolean theNullable) {
 		this.nullable = theNullable;
 	}
-
+	/**
+	 * sub fields
+	 */
 	private List<XmlField> fields;
 
 	public List<XmlField> getFields() {
