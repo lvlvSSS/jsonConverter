@@ -32,6 +32,11 @@ public class IntegerFieldHandle extends FieldHandler<Integer> {
 		if ((field.getMapType() == XmlFieldMapType.NORMAL || field.getMapType() == XmlFieldMapType.REF)
 				&& StringUtils.isBlank(field.getFrom()))
 			return getDefaultValue(field);
+		if(source instanceof Integer)
+			return (Integer)source;
+		if(source instanceof Number) {
+			return ((Number)source).intValue();
+		}
 		String tmpRe = JacksonUtils.toJson(source);
 		Integer re = null;
 		try {

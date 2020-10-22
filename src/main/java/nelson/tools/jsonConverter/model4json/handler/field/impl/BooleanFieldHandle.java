@@ -26,6 +26,8 @@ public class BooleanFieldHandle extends FieldHandler<Boolean> {
 		if ((field.getMapType() == XmlFieldMapType.NORMAL || field.getMapType() == XmlFieldMapType.REF)
 				&& StringUtils.isBlank(field.getFrom()))
 			return getDefaultValue(field);
+		if (source instanceof Boolean)
+			return (Boolean) source;
 
 		String tmpRe = JacksonUtils.toJson(source);
 		Boolean re = null;

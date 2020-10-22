@@ -57,9 +57,8 @@ public class XmlModel4JsonManager {
 	 * @throws DocumentException
 	 */
 	public XmlModel4JsonManager() throws IOException, DocumentException {
-		String path = Paths.get(Thread.currentThread().getContextClassLoader().getResource("").getPath(), "resources",
-				"model4json.xml").toString();
-		LOG.info(String.format("Ready to load the model4json.xml from path[%s]", path));
+		String path = Thread.currentThread().getContextClassLoader().getResource("model4json.xml").getPath();
+		LOG.info(String.format("Ready to load the default model4json.xml from path[%s]", path));
 		init(path);
 	}
 
@@ -91,85 +90,90 @@ public class XmlModel4JsonManager {
 		LOG.info(String.format("[XmlModel4JsonManager.init] start to analysis the xml file[%s]", path));
 
 		models = new HashMap<String, XmlModel>();
-		InputStream inputStream = new FileInputStream(path);
-		SAXReader reader = new SAXReader();
-		Document doc = reader.read(inputStream);
-		// get the 'model' nodes.
-		List<Node> nodes = doc.selectNodes("/models/model");
-		for (Node modelNode : nodes) {
-			String modelname = getAttributeValue(modelNode, "name");
-			String modelver = getAttributeValue(modelNode, "ver");
-			String modelgroup = getAttributeValue(modelNode, "group");
-			XmlModelType modelsourcetype = XmlModel.toXmlModeType(getAttributeValue(modelNode, "sourceType"));
-			XmlModelType modelresulttype = XmlModel.toXmlModeType(getAttributeValue(modelNode, "resultType"));
-			String modelfrom = getAttributeValue(modelNode, "from");
-			if (StringUtils.isBlank(modelname))
-				continue;
-
-			List<Node> fieldNodes = modelNode.selectNodes("field");
-			if (fieldNodes.size() < 1)
-				continue;
-
-			XmlModel model = new XmlModel();
-			model.setName(modelname);
-			model.setGroup(modelgroup);
-			model.setVer(modelver);
-			model.setSourceType(modelsourcetype);
-			model.setResultType(modelresulttype);
-			model.setFrom(modelfrom);
-			// handle the field
-			for (Node fieldNode : fieldNodes) {
-				String fieldName = getAttributeValue(fieldNode, "name");
-				XmlFieldType fieldType = XmlField.toFieldType(getAttributeValue(fieldNode, "type"));
-				if (fieldType == XmlFieldType.NONE)
+		InputStream inputStream = null;
+		try {
+			inputStream = new FileInputStream(path);
+			SAXReader reader = new SAXReader();
+			Document doc = reader.read(inputStream);
+			// get the 'model' nodes.
+			List<Node> nodes = doc.selectNodes("/models/model");
+			for (Node modelNode : nodes) {
+				String modelname = getAttributeValue(modelNode, "name");
+				String modelver = getAttributeValue(modelNode, "ver");
+				String modelgroup = getAttributeValue(modelNode, "group");
+				XmlModelType modelsourcetype = XmlModel.toXmlModeType(getAttributeValue(modelNode, "sourceType"));
+				XmlModelType modelresulttype = XmlModel.toXmlModeType(getAttributeValue(modelNode, "resultType"));
+				String modelfrom = getAttributeValue(modelNode, "from");
+				if (StringUtils.isBlank(modelname))
 					continue;
 
-				XmlField field = new XmlField();
-				field.setName(fieldName);
-				field.setType(fieldType);
-				field.setFrom(getAttributeValue(fieldNode, "from"));
-				field.setMapType(XmlField.toFieldMapType(getAttributeValue(fieldNode, "mapType")));
-				field.setConverter(getAttributeValue(fieldNode, "converter"));
-				field.setDefaultValue(getAttributeValue(fieldNode, "defaultValue"));
-				String fieldRefAlias = getAttributeValue(fieldNode, "refAlias");
-				field.setRefAlias(StringUtils.isBlank(fieldRefAlias) ? fieldName : fieldRefAlias);
+				List<Node> fieldNodes = modelNode.selectNodes("field");
+				if (fieldNodes.size() < 1)
+					continue;
 
-				int length = 0;
-				String lengthStr = getAttributeValue(fieldNode, "length");
-				try {
-					length = Integer.parseInt(StringUtils.isBlank(lengthStr) ? "0" : lengthStr);
-				} catch (NumberFormatException ex) {
-					LOG.warn("[XmlModel4JsonManager.init] fieldLength errors: ", ex);
+				XmlModel model = new XmlModel();
+				model.setName(modelname);
+				model.setGroup(modelgroup);
+				model.setVer(modelver);
+				model.setSourceType(modelsourcetype);
+				model.setResultType(modelresulttype);
+				model.setFrom(modelfrom);
+				// handle the field
+				for (Node fieldNode : fieldNodes) {
+					String fieldName = getAttributeValue(fieldNode, "name");
+					XmlFieldType fieldType = XmlField.toFieldType(getAttributeValue(fieldNode, "type"));
+					if (fieldType == XmlFieldType.NONE)
+						continue;
+
+					XmlField field = new XmlField();
+					field.setName(fieldName);
+					field.setType(fieldType);
+					field.setFrom(getAttributeValue(fieldNode, "from"));
+					field.setMapType(XmlField.toFieldMapType(getAttributeValue(fieldNode, "mapType")));
+					field.setConverter(getAttributeValue(fieldNode, "converter"));
+					field.setDefaultValue(getAttributeValue(fieldNode, "defaultValue"));
+					String fieldRefAlias = getAttributeValue(fieldNode, "refAlias");
+					field.setRefAlias(StringUtils.isBlank(fieldRefAlias) ? fieldName : fieldRefAlias);
+
+					int length = 0;
+					String lengthStr = getAttributeValue(fieldNode, "length");
+					try {
+						length = Integer.parseInt(StringUtils.isBlank(lengthStr) ? "0" : lengthStr);
+					} catch (NumberFormatException ex) {
+						LOG.warn("[XmlModel4JsonManager.init] fieldLength errors: ", ex);
+					}
+					field.setLength(length);
+
+					field.setNullable(!StringUtils.equalsIgnoreCase(getAttributeValue(fieldNode, "nullable"), "false"));
+
+					if (field.getMapType() == XmlFieldMapType.JS_FUNCTION) {
+						Node scriptNode = fieldNode.selectSingleNode("script");
+						if (scriptNode == null)
+							continue;
+						String subFieldScript = scriptNode.getText();
+						if (StringUtils.isBlank(subFieldScript))
+							continue;
+						String subFieldFunction = getAttributeValue(fieldNode, "functionInName");
+						if (StringUtils.isBlank(subFieldFunction))
+							continue;
+						field.setScript(subFieldScript);
+						field.setFunctionInName(subFieldFunction);
+					}
+
+					field.setFields(initSubFields(fieldNode));
+
+					model.getFields().add(field);
 				}
-				field.setLength(length);
 
-				field.setNullable(!StringUtils.equalsIgnoreCase(getAttributeValue(fieldNode, "nullable"), "false"));
-
-				if (field.getMapType() == XmlFieldMapType.JS_FUNCTION) {
-					Node scriptNode = fieldNode.selectSingleNode("script");
-					if (scriptNode == null)
-						continue;
-					String subFieldScript = scriptNode.getText();
-					if (StringUtils.isBlank(subFieldScript))
-						continue;
-					String subFieldFunction = getAttributeValue(fieldNode, "functionInName");
-					if (StringUtils.isBlank(subFieldFunction))
-						continue;
-					field.setScript(subFieldScript);
-					field.setFunctionInName(subFieldFunction);
-				}
-
-				field.setFields(initSubFields(fieldNode));
-
-				model.getFields().add(field);
+				models.put(modelname, model);
 			}
 
-			models.put(modelname, model);
+			LOG.info(String.format("[XmlModel4JsonManager.init] analysis the xml file[%s] successfully!", path));
+		} catch (IOException | DocumentException ex) {
+			if (inputStream != null)
+				inputStream.close();
+			throw ex;
 		}
-
-		if (inputStream != null)
-			inputStream.close();
-		LOG.info(String.format("[XmlModel4JsonManager.init] analysis the xml file[%s] successfully!", path));
 	}
 
 	/**

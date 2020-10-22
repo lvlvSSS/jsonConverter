@@ -33,6 +33,10 @@ public class ModelHandle {
 		this.modelManager = new XmlModel4JsonManager();
 	}
 
+	public ModelHandle(XmlModel4JsonManager manager) {
+		this.modelManager = manager;
+	}
+
 	/**
 	 * 
 	 * @param model4json the specified path for model4json.xml
