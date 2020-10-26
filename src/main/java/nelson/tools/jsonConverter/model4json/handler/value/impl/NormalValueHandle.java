@@ -18,10 +18,8 @@ import nelson.tools.jsonConverter.model4json.handler.value.ValueHandler;
 import nelson.tools.jsonConverter.helper.RegexUtils;
 
 /**
- * 处理MapType为NORMAL/REF的XmlField,为{@link FieldHandler}的实现类。
- * 
- * @author nelson
- *
+ * handle the XmlField that the MapType is NORMAL/REF, this class is the
+ * implement class of {@link FieldHandler}.
  */
 public enum NormalValueHandle implements ValueHandler {
 	INSTANCE;
@@ -34,18 +32,20 @@ public enum NormalValueHandle implements ValueHandler {
 	public Object handle(FieldHandler<?> fieldHandle, Object source) {
 		if (source == null)
 			return null;
-		// 若MapType不是NORMAL或者REF，交给下一个ValueHandler处理。
+		// if the MapType is not NORMAL/REF，then use the
+		// ValueHandler[JsFunctionValueHandle] to handle.
 		if (fieldHandle.getXmlField().getMapType() != XmlFieldMapType.NORMAL
 				&& fieldHandle.getXmlField().getMapType() != XmlFieldMapType.REF) {
 			fieldHandle.setValueHandler(JsFuncValueHandle.INSTANCE);
 			return fieldHandle.getValueHandler().handle(fieldHandle, source);
 		}
-		// 由于ListFieldHandle时直接交给MapFieldHandle来处理的，所以需要做如下判断
+		// as the ListFieldHandle use the MapFieldHandle to handle，so we need to judge
+		// as below:
 		if (fieldHandle.getClass() == MapFieldHandle.class && fieldHandle.getParentHandler() != null
 				&& fieldHandle.getParentHandler().getClass() == ListFieldHandle.class)
 			return source;
 
-		// 若field中from字段为空，则直接返回source。
+		// if the from of the field is empty，then return the source directly.
 		if (StringUtils.isBlank(fieldHandle.getXmlField().getFrom()))
 			return source;
 
@@ -58,7 +58,7 @@ public enum NormalValueHandle implements ValueHandler {
 					fieldHandle.getClass().toString()));
 			return null;
 		}
-		// 若不为空，则需要进行分割from，分割符为'.'
+		//
 		List<String> arrs = Arrays.asList(fieldHandle.getXmlField().getFrom().split("\\.")).stream().filter(str -> {
 			if (StringUtils.isBlank(str))
 				return false;

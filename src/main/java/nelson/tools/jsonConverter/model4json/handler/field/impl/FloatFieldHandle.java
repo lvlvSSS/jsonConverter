@@ -32,11 +32,11 @@ public class FloatFieldHandle extends FieldHandler<Float> {
 		if ((field.getMapType() == XmlFieldMapType.NORMAL || field.getMapType() == XmlFieldMapType.REF)
 				&& StringUtils.isBlank(field.getFrom()))
 			return getDefaultValue(field);
-		if(source instanceof Float)
-			return (Float)source;
-		if(source instanceof Number)
-			return ((Number)source).floatValue();
-		
+		if (source instanceof Float)
+			return (Float) source;
+		if (source instanceof Number)
+			return ((Number) source).floatValue();
+
 		String tmpRe = JacksonUtils.toJson(source);
 		Float re = null;
 		try {
@@ -49,7 +49,7 @@ public class FloatFieldHandle extends FieldHandler<Float> {
 	}
 
 	/**
-	 * 若得到的值为null，则做如下判断
+	 * if the result is null, then use the function to check again.
 	 * 
 	 * @param field
 	 * @return

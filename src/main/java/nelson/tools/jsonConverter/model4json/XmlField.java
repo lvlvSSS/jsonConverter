@@ -12,8 +12,6 @@ import nelson.tools.jsonConverter.model4json.XmlFieldType;
 /**
  * the data model for the field in model4json.xml
  * 
- * @author nelson
- *
  */
 public class XmlField {
 	private static Log LOG = LogFactory.getLog(XmlField.class);
@@ -73,11 +71,12 @@ public class XmlField {
 	}
 
 	/**
-	 * 对于MapType不为{@code XmlFieldType.JS_FUNCTION}时，该成员表示源数据的来源。
 	 * <p/>
-	 * 而对于MapType为{@code XmlFieldType.JS_FUNCTION}时，该成员表示入参。
+	 * if the MapType is {@code XmlMapFieldType.REF}，then the value of this field
+	 * would be the one of the params for the field that the XmlMapFieldType is
+	 * {@code XmlMapFieldType.JS_FUNCTION}.
 	 * <p/>
-	 * 具体的MapType见{@link XmlFieldMapType}
+	 * the MapType - {@link XmlFieldMapType}
 	 */
 	private String from;
 
@@ -100,7 +99,7 @@ public class XmlField {
 	}
 
 	/**
-	 * MapType为{@code XmlFieldType.JS_FUNCTION}时，使用的function名称
+	 * the name of the function if the mapType is {@code XmlFieldType.JS_FUNCTION}
 	 */
 	private String functionInName;
 
@@ -113,7 +112,7 @@ public class XmlField {
 	}
 
 	/**
-	 * MapType为{@code XmlFieldType.JS_FUNCTION}时，js主体
+	 * the javascript body if the MapType is {@code XmlFieldType.JS_FUNCTION}
 	 */
 	private String script;
 
@@ -126,7 +125,7 @@ public class XmlField {
 	}
 
 	/**
-	 * MapType为{@code XmlFieldType.MAPPING}时，convert才会使用
+	 * the convert would be used only if the MapType is {@code XmlFieldType.MAPPING}
 	 */
 	private String converter;
 
@@ -149,9 +148,6 @@ public class XmlField {
 		this.defaultValue = theDefaultValue;
 	}
 
-	/**
-	 * MapType为{@code XmlFieldType.REF}时使用
-	 */
 	private String refAlias;
 
 	public String getRefAlias() {
@@ -185,6 +181,7 @@ public class XmlField {
 	public void setNullable(boolean theNullable) {
 		this.nullable = theNullable;
 	}
+
 	/**
 	 * sub fields
 	 */

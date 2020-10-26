@@ -18,71 +18,70 @@ public class JacksonUtils {
 
 	private static Log LOG = LogFactory.getLog(JacksonUtils.class);
 	/**
-	 * json的转换mapper
+	 * the converter for json in jackson
 	 */
 	public static ObjectMapper jsonMapper;
 	/**
-	 * xml的转换mapper
+	 * the converter for xml in jackson.
 	 */
 	public static XmlMapper xmlMapper;
 
 	static {
-		/// Json mapper.
+
 		jsonMapper = new ObjectMapper();
-		// 在遇到未知属性时，不抛出异常
+		// do not throw exception when the json string has unknown field.
 		jsonMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-		// 在遇到忽略的属性时，直接忽略
+		// ingore the properties if the properties should be ignored.
 		jsonMapper.disable(DeserializationFeature.FAIL_ON_IGNORED_PROPERTIES);
-		// 把java.util.Date, Calendar输出为数字（时间戳）
+
 		jsonMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-		// 美化输出，使用空格
+
 		jsonMapper.enable(SerializationFeature.INDENT_OUTPUT);
-		// 允许序列化空的pojo类
+
 		jsonMapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
-		// 强制JSON 空字符串("")转换为null对象值:
+		// Force to derialize the empty string of field as null.
 		jsonMapper.enable(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT);
-		// 在JSON中允许C/C++ 样式的注释(非标准，默认禁用)
+
 		jsonMapper.configure(JsonParser.Feature.ALLOW_COMMENTS, true);
-		// 允许没有引号的字段名（非标准）
+
 		jsonMapper.configure(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES, true);
-		// 允许单引号（非标准）
+
 		jsonMapper.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
-		// 强制转义非ASCII字符
+		// force to convert the non-ascii chars.
 		// jsonMapper.configure(JsonGenerator.Feature.ESCAPE_NON_ASCII, true);
 		jsonMapper.findAndRegisterModules();
 
-		// Xml mapper
 		xmlMapper = new XmlMapper();
-		// 在遇到未知属性时，不抛出异常
+
 		xmlMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-		// 若类没有指定名称，则使用类名
+		// if the name is not specified, use the class name.
 		xmlMapper.enable(SerializationFeature.WRAP_ROOT_VALUE);
-		// 在遇到忽略的属性时，直接忽略
+
 		xmlMapper.disable(DeserializationFeature.FAIL_ON_IGNORED_PROPERTIES);
-		// 把java.util.Date, Calendar输出为数字（时间戳）
+
 		xmlMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-		// 美化输出，使用空格
+
 		xmlMapper.enable(SerializationFeature.INDENT_OUTPUT);
-		// 允许序列化空的pojo类
+
 		xmlMapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
-		// 强制JSON 空字符串("")转换为null对象值:
+
 		xmlMapper.enable(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT);
-		// 在JSON中允许C/C++ 样式的注释(非标准，默认禁用)
+
 		xmlMapper.configure(JsonParser.Feature.ALLOW_COMMENTS, true);
-		// 允许没有引号的字段名（非标准）
+
 		xmlMapper.configure(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES, true);
-		// 允许单引号（非标准）
+
 		xmlMapper.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
-		// 强制转义非ASCII字符
+		// force to convert the non-ascii chars.
 		// xmlMapper.configure(JsonGenerator.Feature.ESCAPE_NON_ASCII, true);
 		xmlMapper.findAndRegisterModules();
 	}
 
 	/**
-	 * 将对象序列化为JSON格式
+	 * Serialize the object as json string.
 	 * 
-	 * @param source 指定对象
-	 * @return 返回 Json字符串
+	 * @param source the object
+	 * @return the json string.
 	 */
 	public static String toJson(Object source) {
 		if (source == null)
@@ -99,11 +98,11 @@ public class JacksonUtils {
 	}
 
 	/**
-	 * 将Json字符串反序列化为List<T>类型
+	 * Deserialize the json string as List<T>.
 	 * 
-	 * @param json  json字符串，
-	 * @param clazz 表示T的class
-	 * @return 返回List
+	 * @param json  the json string，
+	 * @param clazz the type of the class
+	 * @return return the List<T>.
 	 */
 	public static <T> List<T> fromJsonList(String json, Class<T> clazz) {
 		if (json == null)
@@ -120,11 +119,11 @@ public class JacksonUtils {
 	}
 
 	/**
-	 * 将json字符串转换成T对象
+	 * Deserialize the json string as T.
 	 * 
-	 * @param json  为json字符串
-	 * @param clazz 为T的class
-	 * @return 返回T对象
+	 * @param json
+	 * @param clazz
+	 * @return return the T object.
 	 */
 	public static <T> T fromJson(String json, Class<T> clazz) {
 		if (json == null)
@@ -141,12 +140,12 @@ public class JacksonUtils {
 	}
 
 	/**
-	 * 将json字符串转换成Map
+	 * Deserialize the json string as map object.
 	 * 
-	 * @param json   json字符串
-	 * @param clazzK Key的class
-	 * @param clazzV Value的class
-	 * @return 返回Map<K,V>
+	 * @param json
+	 * @param clazzK the class of K
+	 * @param clazzV the class of V
+	 * @return return the Map<K,V>
 	 */
 	public static <K, V> Map<K, V> fromJsonMap(String json, Class<K> clazzK, Class<V> clazzV) {
 
@@ -159,7 +158,6 @@ public class JacksonUtils {
 		try {
 			re = jsonMapper.readValue(json, jt);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			LOG.warn(String.format("Convert json[%s] to Map<%s,%s> failed!", json, clazzK.getName(), clazzV.getName()),
 					e);
 		}
@@ -167,10 +165,10 @@ public class JacksonUtils {
 	}
 
 	/**
-	 * 将对象序列化为xml字符串
+	 * Serialize the object as xml string.
 	 * 
-	 * @param source 目标对象
-	 * @return 返回source序列化后的xml字符串
+	 * @param source the target object
+	 * @return
 	 */
 	public static String toXml(Object source) {
 		if (source == null)
@@ -186,12 +184,12 @@ public class JacksonUtils {
 	}
 
 	/**
-	 * 将xml字符串反序列化成T类型对象
+	 * Deserialize the xml string as T object.
 	 * 
-	 * @param <T>   范型参数T，T不能为集合对象
-	 * @param xml   xml字符串
-	 * @param clazz T的class
-	 * @return 返回T的对象
+	 * @param <T>   <B>T should not be the collection or iterable.</B>
+	 * @param xml
+	 * @param clazz the class of T
+	 * @return
 	 */
 	public static <T> T fromXml(String xml, Class<T> clazz) {
 		if (xml == null)

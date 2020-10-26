@@ -33,6 +33,13 @@ public enum MappingValueHandle implements ValueHandler {
 					fieldHandle.getClass().toString()));
 			return null;
 		}
+		if (this.mapping.size() <= 0 || !this.mapping.containsKey(fieldHandle.getXmlField().getConverter())) {
+			LOG.error(String.format(
+					"[MappingValueHandle.handle] field[%s](mapType[%s]) - [%s] can't be handled in FieldHandler[%s]",
+					fieldHandle.getXmlField().getName(), fieldHandle.getXmlField().getMapType(),
+					fieldHandle.getXmlField().getConverter(), fieldHandle.getClass().toString()));
+			return null;
+		}
 		return mapping.get(fieldHandle.getXmlField().getConverter()).get(fieldHandle.getXmlField().getFrom());
 	}
 

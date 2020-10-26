@@ -32,10 +32,10 @@ public class IntegerFieldHandle extends FieldHandler<Integer> {
 		if ((field.getMapType() == XmlFieldMapType.NORMAL || field.getMapType() == XmlFieldMapType.REF)
 				&& StringUtils.isBlank(field.getFrom()))
 			return getDefaultValue(field);
-		if(source instanceof Integer)
-			return (Integer)source;
-		if(source instanceof Number) {
-			return ((Number)source).intValue();
+		if (source instanceof Integer)
+			return (Integer) source;
+		if (source instanceof Number) {
+			return ((Number) source).intValue();
 		}
 		String tmpRe = JacksonUtils.toJson(source);
 		Integer re = null;
@@ -49,7 +49,7 @@ public class IntegerFieldHandle extends FieldHandler<Integer> {
 	}
 
 	/**
-	 * 若得到的值为null，则做如下判断
+	 * if the result is null, then use the function to check again.
 	 * 
 	 * @param field
 	 * @return

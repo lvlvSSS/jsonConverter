@@ -3,18 +3,19 @@ package nelson.tools.jsonConverter.model4json;
 import nelson.tools.jsonConverter.model4json.handler.value.ValueHandler;
 
 /**
- * 表示应该如何获取源数据，具体的处理实现为{@link ValueHandler} 的子类
- * 
- * @author nelson
- *
+ * the enum indicates that how to get the source data. the function should be
+ * implemeted in the sub class of the {@link ValueHandler}
  */
 public enum XmlFieldMapType {
-	// 供其他的field使用，如JS_FUNCTION的入参。但不会作为结果输出
+	/**
+	 * used for the params of the field that the XmlMapFieldType is JS_FUNCTION. and
+	 * if the XmlMapFieldType is REF, this field would not be used as result.
+	 */
 	REF,
-	// 正常使用
+	// normal use.
 	NORMAL,
-	// 表示为JS脚本
+	// indicates that use the result of the javascript
 	JS_FUNCTION,
-	// 需要做转换，converter在此使用
+	// convert would be used here.
 	MAPPING;
 }

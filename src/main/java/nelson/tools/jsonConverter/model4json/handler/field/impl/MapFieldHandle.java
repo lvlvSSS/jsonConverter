@@ -36,7 +36,8 @@ public class MapFieldHandle extends FieldHandler<Map<String, Object>> {
 	public Map<String, Object> postFieldValue(XmlField field, Object source) {
 		if (source == null)
 			return null;
-		// 由于ListFieldHanlde会直接交给MapFieldHandle，所以需要判断parentHandler
+		// the ListFieldHanlde would use the MapFieldHandle directly，so need to check
+		// the parentHandler
 		if (!(field.getType() == XmlFieldType.MAP || this.parentHandler.getXmlField().getType() == XmlFieldType.LIST)
 				|| field.getFields() == null || field.getFields().size() < 1) {
 			LOG.error(String.format(
@@ -68,8 +69,9 @@ public class MapFieldHandle extends FieldHandler<Map<String, Object>> {
 	}
 
 	/**
+	 * the XmlMapFieldType.REF of XmlField would be handled here.
 	 * 
-	 * @param fields 子field中MapType为REF的fields
+	 * @param fields
 	 * @param source
 	 * @return
 	 */
@@ -87,11 +89,12 @@ public class MapFieldHandle extends FieldHandler<Map<String, Object>> {
 	}
 
 	/**
-	 * 工厂方法，根据XmlField的Type选定执行FieldHandler
+	 * factory method choose the appropriate FieldHandler to handle the XmlField
+	 * based on the Type.
 	 * 
 	 * @param field
 	 * @param source
-	 * @param refs   为每一个FieldHandler设置refs，用于MapType为JS_FUNCTION的Field。
+	 * @param refs   this would set the references for every non-ref FieldHandler.
 	 * @return
 	 */
 	private Object getUnSpecifiedFieldValue(XmlField field, Map<String, Object> source, Map<String, Object> refs) {

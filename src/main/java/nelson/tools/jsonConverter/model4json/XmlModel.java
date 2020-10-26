@@ -8,10 +8,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
- * model4json.xml中的model的模型。
+ * the model of model4json.xml
  * 
- * @author nelson
- *
  */
 public class XmlModel {
 	private static Log LOG = LogFactory.getLog(XmlModel.class);

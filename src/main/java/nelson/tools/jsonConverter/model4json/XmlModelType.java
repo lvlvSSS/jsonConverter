@@ -3,8 +3,6 @@ package nelson.tools.jsonConverter.model4json;
 /**
  * this is to declare that the type of the source data or the target data.
  * 
- * @author nelson
- *
  */
 public enum XmlModelType {
 	/**

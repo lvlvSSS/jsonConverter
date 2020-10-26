@@ -22,14 +22,15 @@ public class RegexUtils {
 	}
 
 	/**
-	 * 在字符串中找到字典（eg: “ab=cd”,ab为key,cd为value)中value值
+	 * look up the value of the pattern.（eg: “ab=cd”,ab is <b>key</b>,then cd is the
+	 * <b>value</b>)
 	 * 
-	 * @param pattern    要匹配的正则模式
-	 * @param target     目标字符串
-	 * @param key        对应的key的字符串
-	 * @param keyIndex   key字符串的index
-	 * @param valueIndex value字符串的index
-	 * @return 返回value字符串
+	 * @param pattern    the regex pattern.
+	 * @param target     the target string.
+	 * @param key        the key string that you want to extract.
+	 * @param keyIndex   the index for key string.
+	 * @param valueIndex the index for value string.
+	 * @return
 	 */
 	public static String getValue(String pattern, String target, String key, int keyIndex, int valueIndex) {
 		Pattern p = Pattern.compile(pattern);

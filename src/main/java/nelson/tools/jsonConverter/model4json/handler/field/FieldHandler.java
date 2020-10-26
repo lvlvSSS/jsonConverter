@@ -7,7 +7,7 @@ import nelson.tools.jsonConverter.model4json.handler.value.ValueHandler;
 import nelson.tools.jsonConverter.model4json.handler.value.impl.NormalValueHandle;
 
 /**
- * the subclass is used to handle the attribute -'type' of the model4json.xml
+ * the subclass is used to handle the attribute -<B>type</B> of the model4json.xml
  * 
  * @author nelson
  *
